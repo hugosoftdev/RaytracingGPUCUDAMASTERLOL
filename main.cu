@@ -36,7 +36,7 @@ __global__ void render(vec3 *img_buffer, int max_x, int max_y, int ns, camera **
     if((i >= max_x) || (j >= max_y)) return;
 
     int pixel_index = j*max_x + i;
-    curandState randomState;
+    curandState *randomState;
     curand_init(2000, pixel_index, 0, &randomState);
 
     vec3 col(0,0,0);
