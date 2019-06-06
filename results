@@ -1,9 +1,60 @@
 GPU
+400x200
+render time -> 213us -> 77.75%
+create_world -> 61us -> 22.25%
+cudamallocmanaged -> 140ms -> 70%
+cudadevicereset -> 51ms -> 25%
+cudadevicesync -> 0.15%
+tempo_total -> 0.18s
+
+CPU com vetorizador -> 0.02s
+CPU sem vetorizador -> 0.05s
+
+
+GPU
 1200x600
 render time -> 1.8310ms -> 96.80%
 create_world -> 60.834us -> 3.20%
 cudamallocmanaged -> 143ms -> 69%
 cudadevicereset -> 53.4ms -> 25.78%
+cudadevicesync -> 1%
 tempo_total -> 0.2777s
+
+CPU com vetorizador -> 0.17s
+CPU sem vetorizador -> 0.43s
+
+
+GPU
+3200x1800
+render time -> 16.794ms -> 99.63%
+create_world -> 61.64us -> 0.37%
+cudamallocmanaged -> 172ms -> 60%
+cudadevicereset -> 85.3ms -> 30%
+cudadevicesync -> 6%
+tempo_total -> 1.706s
+
+CPU com vetorizador -> 1.55s
+CPU sem vetorizador -> 3.84s
+
+
+GPU
+9600x5400
+render time -> 129.03ms -> 99.95%
+create_world -> 61.54us -> 0.05%
+cudamallocmanaged -> 405ms -> 46,6%
+cudadevicereset -> 328.65ms -> 37.36%
+cudadevicesync -> 16%
+tempo_total -> 12.967s
+
+CPU com vetorizador -> 12.41s
+CPU sem vetorizador -> 30.05s
+
+
+
+
+
+
+
+
 
 
