@@ -86,7 +86,7 @@ int main(){
 
 
 
-  float block_size = 16.0;
+  float block_size = 8.0;
   // Dimensoes para organizar na GPU
   dim3 dimGrid(ceil(ny/block_size), ceil(nx/block_size), 1);
   dim3 dimBlock((int) block_size, int (block_size), 1);
