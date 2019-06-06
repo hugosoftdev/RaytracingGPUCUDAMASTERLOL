@@ -21,17 +21,18 @@ __device__ vec3 color(const ray& r) {
    return (1.0f-t)*vec3(1.0, 1.0, 1.0) + t*vec3(0.5, 0.7, 1.0);
 }
 
-__global__ void render(vec3 *img_buffer, int max_x, int max_y, vec3 lower_left_corner, vec3 horizontal, vec3 vertical, vec3 origin) {
-   int i = threadIdx.x + blockIdx.x * blockDim.x;
-   int j = threadIdx.y + blockIdx.y * blockDim.y;
-   if((i >= max_x) || (j >= max_y)) return;
-   int pixel_index = j*max_x + i;
-   float u = float(i) / float(max_x);
-   float v = float(j) / float(max_y);
-   ray r(origin, lower_left_corner + u*horizontal + v*vertical);
-   img_buffer[pixel_index] = color(r);
+__global__ void render(vec3 *fb, int max_x, int max_y,
+                       vec3 lower_left_corner, vec3 horizontal, vec3 vertical, vec3 origin,
+                       hitable **world) {
+    int i = threadIdx.x + blockIdx.x * blockDim.x;
+    int j = threadIdx.y + blockIdx.y * blockDim.y;
+    if((i >= max_x) || (j >= max_y)) return;
+    int pixel_index = j*max_x + i;
+    float u = float(i) / float(max_x);
+    float v = float(j) / float(max_y);
+    ray r(origin, lower_left_corner + u*horizontal + v*vertical);
+    fb[pixel_index] = color(r, world);
 }
-
 int main(){
 
   int nx = 1200;
