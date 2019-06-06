@@ -86,10 +86,10 @@ int main(){
 
 
 
-  float threads= 8.0;
+  float n_threads= 8.0;
   // Dimensoes para organizar na GPU
-     dim3 blocks(nx/threads+1,ny/threads+1);
-    dim3 threads(threads,threads);
+     dim3 blocks(nx/n_threads+1,ny/n_threads+1);
+    dim3 threads(n_threads,n_threads);
     render<<<blocks, threads>>>(img_buffer, nx, ny,
                                 vec3(-2.0, -1.0, -1.0),
                                 vec3(4.0, 0.0, 0.0),
