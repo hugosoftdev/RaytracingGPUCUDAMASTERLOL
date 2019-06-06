@@ -1,10 +1,13 @@
 #include <iostream>
 #include <fstream>
+#include <time.h>
 #include <float.h>
+#include <curand_kernel.h>
 #include "vec3.h"
 #include "ray.h"
 #include "sphere.h"
 #include "hitable_list.h"
+#include "camera.h"
 
 
 __global__ void create_world(hitable **d_esferas, hitable **d_world) {
