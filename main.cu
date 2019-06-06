@@ -7,11 +7,11 @@
 #include "hitable_list.h"
 
 
-__global__ void create_world(hitable **d_list, hitable **d_world) {
+__global__ void create_world(hitable **d_esferas, hitable **d_world) {
     if (threadIdx.x == 0 && blockIdx.x == 0) {
-        *(d_list)   = new sphere(vec3(0,0,-1), 0.5);
-        *(d_list+1) = new sphere(vec3(0,-100.5,-1), 100);
-        *d_world    = new hitable_list(d_list,2);
+        *(d_esferas)   = new sphere(vec3(0,0,-1), 0.5);
+        *(d_esferas+1) = new sphere(vec3(0,-100.5,-1), 100);
+        *d_world    = new hitable_list(d_esferas,2);
     }
 }
 
@@ -74,7 +74,7 @@ int main(){
   }
 
   //criando o mundo 
-  create_world<<<1,1>>>(d_list,d_world);
+  create_world<<<1,1>>>(d_esferas,d_world);
 
   cudaDeviceSynchronize();
 

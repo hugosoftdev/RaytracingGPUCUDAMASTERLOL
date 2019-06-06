@@ -1,4 +1,3 @@
-
 #ifndef SPHEREH
 #define SPHEREH
 
