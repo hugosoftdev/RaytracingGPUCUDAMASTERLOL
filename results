@@ -1,0 +1,9 @@
+GPU
+1200x600
+render time -> 1.8310ms -> 96.80%
+create_world -> 60.834us -> 3.20%
+cudamallocmanaged -> 143ms -> 69%
+cudadevicereset -> 53.4ms -> 25.78%
+tempo_total -> 0.2777s
+
+
