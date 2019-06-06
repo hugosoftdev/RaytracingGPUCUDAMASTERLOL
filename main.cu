@@ -15,12 +15,17 @@ __global__ void create_world(hitable **d_esferas, hitable **d_world) {
     }
 }
 
-__device__ vec3 color(const ray& r) {
-   vec3 unit_direction = unit_vector(r.direction());
-   float t = 0.5f*(unit_direction.y() + 1.0f);
-   return (1.0f-t)*vec3(1.0, 1.0, 1.0) + t*vec3(0.5, 0.7, 1.0);
+__device__ vec3 color(const ray& r, hitable **world) {
+    hit_record rec;
+    if ((*world)->hit(r, 0.0, FLT_MAX, rec)) {
+        return 0.5f*vec3(rec.normal.x()+1.0f, rec.normal.y()+1.0f, rec.normal.z()+1.0f);
+    }
+    else {
+        vec3 unit_direction = unit_vector(r.direction());
+        float t = 0.5f*(unit_direction.y() + 1.0f);
+        return (1.0f-t)*vec3(1.0, 1.0, 1.0) + t*vec3(0.5, 0.7, 1.0);
+    }
 }
-
 __global__ void render(vec3 *fb, int max_x, int max_y,
                        vec3 lower_left_corner, vec3 horizontal, vec3 vertical, vec3 origin,
                        hitable **world) {
