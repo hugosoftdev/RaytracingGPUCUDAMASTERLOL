@@ -49,7 +49,7 @@ int main(){
   int img_buffer_size = resolution*color_channel*sizeof(float);
 
   // allocate img_buffer
-  float *img_buffer;
+  vec3 *img_buffer;
   error = cudaMallocManaged((void **)&img_buffer, img_buffer_size);
   if(error!=cudaSuccess) {
         printf("Memory Allocation CUDA failure %s:%d: '%s'\n",__FILE__,__LINE__,cudaGetErrorString(error));
