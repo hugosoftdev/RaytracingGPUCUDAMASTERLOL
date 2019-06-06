@@ -26,22 +26,33 @@ __device__ vec3 color(const ray& r, hitable **world) {
         return (1.0f-t)*vec3(1.0, 1.0, 1.0) + t*vec3(0.5, 0.7, 1.0);
     }
 }
-__global__ void render(vec3 *fb, int max_x, int max_y,
-                       vec3 lower_left_corner, vec3 horizontal, vec3 vertical, vec3 origin,
-                       hitable **world) {
+
+__global__ void render(vec3 *img_buffer, int max_x, int max_y, int ns, camera **cam, hitable **world) {
     int i = threadIdx.x + blockIdx.x * blockDim.x;
     int j = threadIdx.y + blockIdx.y * blockDim.y;
     if((i >= max_x) || (j >= max_y)) return;
+
     int pixel_index = j*max_x + i;
-    float u = float(i) / float(max_x);
-    float v = float(j) / float(max_y);
-    ray r(origin, lower_left_corner + u*horizontal + v*vertical);
-    fb[pixel_index] = color(r, world);
+    curandState randomState;
+    curand_init(2000, pixel_index, 0, &randomState);
+
+    vec3 col(0,0,0);
+    for(int s=0; s < ns; s++) {
+        float u = float(i + curand_uniform(&randomState)) / float(max_x);
+        float v = float(j + curand_uniform(&randomState)) / float(max_y);
+        ray r = (*cam)->get_ray(u,v);
+        col += color(r, world);
+    }
+    img_buffer[pixel_index] = col/float(ns);
 }
+
+
+
 int main(){
 
   int nx = 1200;
   int ny = 600;
+  int ns = 10;
 
   //arquivo de saida
   std::ofstream myfile;
@@ -79,6 +90,13 @@ int main(){
       exit(EXIT_FAILURE);
   }
 
+  camera **d_camera;
+  error = cudaMalloc((void **)&d_camera, sizeof(camera *));
+  if(error!=cudaSuccess) {
+      printf("Memory Allocation CUDA failure %s:%d: '%s'\n",__FILE__,__LINE__,cudaGetErrorString(error));
+      exit(EXIT_FAILURE);
+  }
+
   //criando o mundo 
   create_world<<<1,1>>>(d_esferas,d_world);
 
@@ -88,14 +106,9 @@ int main(){
 
   float n_threads= 8.0;
   // Dimensoes para organizar na GPU
-     dim3 blocks(nx/n_threads+1,ny/n_threads+1);
-    dim3 threads(n_threads,n_threads);
-    render<<<blocks, threads>>>(img_buffer, nx, ny,
-                                vec3(-2.0, -1.0, -1.0),
-                                vec3(4.0, 0.0, 0.0),
-                                vec3(0.0, 2.0, 0.0),
-                                vec3(0.0, 0.0, 0.0),
-d_world);
+  dim3 blocks(nx/n_threads+1,ny/n_threads+1);
+  dim3 threads(n_threads,n_threads);
+  render<<<blocks, threads>>>(img_buffer, nx, ny, ns, d_camera, d_world);
 
   cudaDeviceSynchronize();
 
