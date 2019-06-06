@@ -88,23 +88,21 @@ int main(){
 
   float block_size = 8.0;
   // Dimensoes para organizar na GPU
-  dim3 dimGrid(ceil(ny/block_size), ceil(nx/block_size), 1);
-  dim3 dimBlock((int) block_size, int (block_size), 1);
-
-
-  render<<<dimGrid, dimBlock>>>(img_buffer, nx, ny,
-                            vec3(-2.0, -1.0, -1.0),
-                            vec3(4.0, 0.0, 0.0),
-                            vec3(0.0, 2.0, 0.0),
-                            vec3(0.0, 0.0, 0.0),
-                            d_world);
+     dim3 blocks(nx/tx+1,ny/ty+1);
+    dim3 threads(tx,ty);
+    render<<<blocks, threads>>>(fb, nx, ny,
+                                vec3(-2.0, -1.0, -1.0),
+                                vec3(4.0, 0.0, 0.0),
+                                vec3(0.0, 2.0, 0.0),
+                                vec3(0.0, 0.0, 0.0),
+d_world);
 
   cudaDeviceSynchronize();
 
   //jogando os pixels calculado para o arquivo de saida formador da imagem
   for (int j = ny-1; j >= 0; j--) {
     for (int i = 0; i < nx; i++) {
-        size_t pixel_index = j*nx + i;
+        int pixel_index = j*nx + i;
         int ir = int(255.99*img_buffer[pixel_index].r());
         int ig = int(255.99*img_buffer[pixel_index].g());
         int ib = int(255.99*img_buffer[pixel_index].b());
