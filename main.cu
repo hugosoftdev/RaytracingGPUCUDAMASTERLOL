@@ -52,7 +52,7 @@ int main(){
 
   int resolution = nx*ny;
   int color_channel = 3;
-  int img_buffer_size = resolution*color_channel*sizeof(float);
+  int img_buffer_size = resolution*color_channel*sizeof(vec3);
 
   // allocate img_buffer
   vec3 *img_buffer;
