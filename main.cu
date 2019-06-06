@@ -3,6 +3,7 @@
 #include <float.h>
 #include "vec3.h"
 #include "ray.h"
+#include <time.h>
 #include "sphere.h"
 #include "hitable_list.h"
 
@@ -42,6 +43,9 @@ int main(){
 
   int nx = 1200;
   int ny = 600;
+
+  clock_t start, stop;
+  start = clock();
 
   //arquivo de saida
   std::ofstream myfile;
@@ -111,5 +115,9 @@ d_world);
   }
   
   cudaDeviceReset();
+
+  stop = clock();
+  double timer_seconds = ((double)(stop - start)) / CLOCKS_PER_SEC;
+  std::cout  << timer_seconds << " seconds.\n";
 }
 
